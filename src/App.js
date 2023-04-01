@@ -1,56 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import './App.css';
+import ALLpost from './app/Component/ALLpost';
+import { useDispatch } from 'react-redux';
+import { getPost } from './features/Post/postSlice';
 
 function App() {
+  const [post,setPost]=useState([]);
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    fetch('https://jsonplaceholder.typicode.com/posts?_limit=20')
+    .then(res => res.json())
+    .then(data =>
+      {
+        if(localStorage?.getItem("posts")===null)
+        {
+          localStorage.setItem("posts",JSON.stringify(data))
+          dispatch(getPost())
+        }
+      }
+      )
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div>
+    <ALLpost></ALLpost>
     </div>
   );
 }
